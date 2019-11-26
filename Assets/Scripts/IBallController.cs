@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IPlayer : IReleasable
+public interface IBallController : IReleasable
 {
-    void Move(float value);
+    void Move(Vector2 position);
     void GoToStart();
 }

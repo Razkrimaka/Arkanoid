@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGameModel : IReleasable
+public class BallView : MonoBehaviour
 {
 
 }
