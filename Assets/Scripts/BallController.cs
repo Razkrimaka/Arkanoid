@@ -8,12 +8,12 @@ public class BallController : IBallController
 
     public void Move(Vector2 position)
     {
-        _ballView.transform.localPosition = position;
+        _ballView.transform.position = position;
     }
 
     public void GoToStart()
     {
-        _ballView.transform.localPosition = StartPosition;
+        _ballView.transform.position = StartPosition;
     }
 
     #endregion

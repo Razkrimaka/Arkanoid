@@ -6,12 +6,12 @@ public class Player :  IPlayer
 
     public void Move(float xPosition)
     {
-        _playerView.transform.localPosition = new Vector3(xPosition, YPosition);
+        _playerView.transform.position = new Vector3(xPosition, YPosition);
     }
 
     public void GoToStart()
     {
-        _playerView.transform.localPosition = StartPosition;
+        _playerView.transform.position = StartPosition;
     }
 
     #endregion
@@ -32,6 +32,6 @@ public class Player :  IPlayer
     }
 
     private PlayerView _playerView;
-    private float YPosition => _playerView.transform.localPosition.y;
+    private float YPosition => _playerView.transform.position.y;
     private readonly Vector2 StartPosition;
 }
