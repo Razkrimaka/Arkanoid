@@ -1,15 +1,19 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Block :  IBlock
+public abstract class Block :  IBlock
 {
-    public Block(string prefabName, IGameplayCanvas gameplayCanvas, Vector3 position)
+    public event EventHandler Destroyed;
+
+    public abstract void Hit();
+
+    protected Block(string prefabName, ILevelRoot levelRoot, Vector3 position)
     {
-        _blockView = GameObject.Instantiate(Resources.Load<BlockView>(prefabName), gameplayCanvas.CanvasTransform, true);
+        _blockView = GameObject.Instantiate(Resources.Load<BlockView>(prefabName), levelRoot.Transform, true);
         _blockView.transform.position = position;
-        _blockView.DrawNormals();
     }
 
-    private readonly BlockView _blockView;
+    protected readonly BlockView _blockView;
 }

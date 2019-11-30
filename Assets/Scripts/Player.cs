@@ -25,9 +25,9 @@ public class Player :  IPlayer
 
     #endregion
 
-    public Player(string prefabName, IGameplayCanvas gameplayCanvas, Vector2 startPosition)
+    public Player(string prefabName, ILevelRoot gameplayCanvas, Vector2 startPosition)
     {
-        _playerView = GameObject.Instantiate(Resources.Load<PlayerView>(prefabName), gameplayCanvas.CanvasTransform, true);
+        _playerView = GameObject.Instantiate(Resources.Load<PlayerView>(prefabName), gameplayCanvas.Transform, true);
         StartPosition = startPosition;
     }
 

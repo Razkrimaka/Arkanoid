@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGameplayCanvas
+public enum WallType 
 {
-    Transform CanvasTransform { get; }
+    UsuallySideWall,
+    Roof
 }

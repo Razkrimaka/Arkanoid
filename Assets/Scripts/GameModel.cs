@@ -62,20 +62,14 @@ public class GameModel : IGameModel
 
     private void OnTick(object sender, float duration)
     {
-        CurrentBallPosition = _currentBallPosition + _ballMoveDirection * _ballSpeed;
+
     }
 
     private void GoToStart ()
     {
         Player.GoToStart();
         _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
-        BallController.GoToStart();
-        _currentBallPosition = LevelConfiguration.BallStartPosition;
-
-        foreach (var blockPlaceholder in LevelConfiguration.BlocksPlaceholders)
-        {
-
-        }
+        BallController.GoToStart(Vector2.one * BallEnergy);
     }
 
     private float CurrentPlayerPosition 
@@ -87,21 +81,9 @@ public class GameModel : IGameModel
             Player.Move(value);
         }
     }
-    private Vector2 CurrentBallPosition
-    {
-        get => _currentBallPosition;
-        set
-        {
-            _currentBallPosition = value;
-            BallController.Move(_currentBallPosition);
-        }
-    }
-
-    private Vector2 _ballMoveDirection = Vector2.one;
-    private float _ballSpeed = 2f;
 
     private float _currentPlayerPosition;
-    private Vector2 _currentBallPosition;
+    private const float BallEnergy = 200f;
 
     private List<IBlock> _blocks = new List<IBlock>();
 

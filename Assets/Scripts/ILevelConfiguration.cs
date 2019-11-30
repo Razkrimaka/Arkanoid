@@ -8,4 +8,5 @@ public interface ILevelConfiguration
     Vector2 BallStartPosition { get; }
 
     IEnumerable<Vector3> BlocksPlaceholders { get; }
+    IEnumerable<(Vector3 Placeholder, WallType[] ApprovedWalls)> Walls { get; }
 }

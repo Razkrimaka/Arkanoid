@@ -6,14 +6,10 @@ public class BallController : IBallController
 {
     #region IBallController
 
-    public void Move(Vector2 position)
-    {
-        _ballView.transform.position = position;
-    }
-
-    public void GoToStart()
+    public void GoToStart(Vector2 startMoveDirection)
     {
         _ballView.transform.position = StartPosition;
+        _ballView.Rigidbody.AddForce(startMoveDirection, ForceMode2D.Impulse);
     }
 
     #endregion
@@ -27,9 +23,9 @@ public class BallController : IBallController
 
     #endregion
 
-    public BallController(string prefabName, IGameplayCanvas gameplayCanvas, Vector2 startPosition)
+    public BallController(string prefabName, ILevelRoot gameplayCanvas, Vector2 startPosition)
     {
-        _ballView = GameObject.Instantiate(Resources.Load<BallView>(prefabName), gameplayCanvas.CanvasTransform, true);
+        _ballView = GameObject.Instantiate(Resources.Load<BallView>(prefabName), gameplayCanvas.Transform, true);
         StartPosition = startPosition;
     }
 

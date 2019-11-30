@@ -4,6 +4,5 @@ using UnityEngine;
 
 public interface IBallController : IReleasable
 {
-    void Move(Vector2 position);
-    void GoToStart();
+    void GoToStart(Vector2 startMoveDirection);
 }

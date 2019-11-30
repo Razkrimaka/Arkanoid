@@ -15,11 +15,21 @@ public class Gameplay : IGameplay
         _player = new Player("Prefabs/PlayerView", _gameplayCanvas, _levelConfiguration.PlayerStartPosition);
         _ballController = new BallController("Prefabs/BallView", _gameplayCanvas, _levelConfiguration.BallStartPosition);
         _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle);
+        _wallPack = Resources.Load<WallPack>("Configs/WallPack");
 
         foreach (var blockPlaceholder in _levelConfiguration.BlocksPlaceholders)
         {
             var block = new Block("Prefabs/BlockView", _gameplayCanvas, blockPlaceholder);
             _blocks.Add(block);
+        }
+
+        foreach(var wallConfig in _levelConfiguration.Walls)
+        {
+            var randomIndex = Random.Range(0, wallConfig.ApprovedWalls.Length);
+            var template = _wallPack.GetWall(wallConfig.ApprovedWalls[randomIndex]);
+            var wall = GameObject.Instantiate(template, _gameplayCanvas.Transform);
+            wall.transform.position = wallConfig.Placeholder;
+            _walls.Add(wall);
         }
     }
 
@@ -27,10 +37,10 @@ public class Gameplay : IGameplay
 
     public Gameplay()
     {
-
     }
 
     private List<IBlock> _blocks = new List<IBlock>();
+    private List<IReleasable> _walls = new List<IReleasable>();
 
 
     private IInputController _inputController;
@@ -38,7 +48,8 @@ public class Gameplay : IGameplay
     private IGameCicle _gameCicle;
     private IPlayer _player;
     private IBallController _ballController;
-    private IGameplayCanvas _gameplayCanvas;
+    private ILevelRoot _gameplayCanvas;
     private ILevelConfiguration _levelConfiguration;
     private IGameModel _gameModel;
+    private IWallPack _wallPack;
 }
