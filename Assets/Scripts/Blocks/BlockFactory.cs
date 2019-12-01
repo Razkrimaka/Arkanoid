@@ -55,7 +55,6 @@ public class BlockFactory : IFactory<Vector3, IBlock>
         if (randomValue > BonusRate)
         {
             var bonus = (Bonuses)UnityEngine.Random.Range(0, bonusArray.Length);
-            Debug.LogError($"Создан блок с бонусом: {bonus}");
             result = new BlockWithBonus(bonus, BonusManager, block);
         }
 

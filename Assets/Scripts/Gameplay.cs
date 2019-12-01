@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Gameplay : IGameplay
@@ -36,6 +37,10 @@ public class Gameplay : IGameplay
             _walls.Add(wall);
         }
 
+        var gameEndTemplate = Resources.Load<GameObject>("Prefabs/LevelEnd");
+        var gameEndInstance = GameObject.Instantiate(gameEndTemplate, _levelRoot.Transform, true);
+        gameEndInstance.transform.position = _levelConfiguration.LevelEndPlaceholder;
+
         _gameModel.TimeChanged += OnRemainingTimeChanged;
         _gameModel.GameOver += OnGameOver;
     }
@@ -43,7 +48,78 @@ public class Gameplay : IGameplay
     private void OnGameOver(object sender, GameOverReasons reason)
     {
         _gameCicle.Pause = true;
-        Debug.LogError("Конец игры!");
+        _ballController.Stop();
+
+        string windowBody = string.Empty;
+        string[] buttonTexts = null;
+        ButtonCommands[] buttonCommands = null;
+        
+        switch (reason)
+        {
+            case GameOverReasons.Time:
+                windowBody = "У вас закончилось время!";
+                buttonTexts = new string[]
+                {
+                    "Заново",
+                    "Закончить игру"
+                };
+                buttonCommands = new ButtonCommands[]
+                {
+                    ButtonCommands.Retry,
+                    ButtonCommands.Close
+                };
+                break;
+            case GameOverReasons.LoseBall:
+                windowBody = "Вы проиграли. Попробовать снова?";
+                buttonTexts = new string[]
+                {
+                    "Заново",
+                    "Закончить игру"
+                };
+                buttonCommands = new ButtonCommands[]
+                {
+                    ButtonCommands.Retry,
+                    ButtonCommands.Close
+                };
+                break;
+            case GameOverReasons.Win:
+                windowBody = "Поздравляем! Вы выиграли. Следующий уровень?";
+                buttonTexts = new string[]
+                {
+                    "Следующий",
+                    "Закончить игру"
+                };
+                buttonCommands = new ButtonCommands[]
+                {
+                    ButtonCommands.Next,
+                    ButtonCommands.Close
+                };
+                break;
+        }
+
+        var dialog = UIManager.Show(WindowID.Dialog, windowBody, buttonTexts, buttonCommands);
+
+        dialog.WindowClosed += OnDialogClosed;
+    }
+
+    private void OnDialogClosed(object sender, ButtonCommands closeResult)
+    {
+        switch (closeResult)
+        {
+            case ButtonCommands.Close:
+#if UNITY_EDITOR
+                EditorApplication.isPlaying = false;
+#else
+                    Application.Quit();
+#endif
+                break;
+            case ButtonCommands.Next:
+                Debug.Log("Следующий уровень");
+                break;
+            case ButtonCommands.Retry:
+                Debug.Log("Сначала");
+                break;
+        }
     }
 
     private void OnRemainingTimeChanged(object sender, TimeSpan timeSpan)
@@ -51,10 +127,11 @@ public class Gameplay : IGameplay
         _timePanelController.SetTime(timeSpan);
     }
 
-    #endregion
+#endregion
 
-    public Gameplay()
+    public Gameplay(IUIManager uiManager)
     {
+        UIManager = uiManager;
     }
 
     private List<IBlock> _blocks = new List<IBlock>();
@@ -73,4 +150,6 @@ public class Gameplay : IGameplay
     private IFactory<Vector3, IBlock> _blockFactory;
     private IBonusManager _bonusManager;
     private ITimePanelController _timePanelController;
+
+    private readonly IUIManager UIManager;
 }

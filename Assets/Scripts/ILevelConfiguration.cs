@@ -10,7 +10,7 @@ public interface ILevelConfiguration
     IEnumerable<Vector3> BlocksPlaceholders { get; }
     IEnumerable<(Vector3 Placeholder, WallType[] ApprovedWalls)> Walls { get; }
 
-    Vector3 GameOverPlaceholder { get; }
+    Vector3 LevelEndPlaceholder { get; }
 
     float BonusTime { get; }
     float StartTime { get; }

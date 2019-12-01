@@ -50,6 +50,7 @@ public class GameModel : IGameModel
             Input.MoveRight += OnInputMoveRight;
 
             BonusManager.BonusPicked += ProcessBonus;
+            BallController.LoseBall += OnLoseBall;
 
             GameCicle.Tick += OnTick;
         }
@@ -70,6 +71,11 @@ public class GameModel : IGameModel
         {
             CurrentPlayerPosition -= duration * ControllerConfig.MoveSensity;
         }
+    }
+
+    private void OnLoseBall(object sender, EventArgs eventArgs)
+    {
+        ThrowGameOver(GameOverReasons.LoseBall);
     }
 
     private void ProcessBonus(object sender, Bonuses bonus)

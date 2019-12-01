@@ -17,7 +17,7 @@ public class LevelConfig : MonoBehaviour, ILevelConfiguration
 
     public IEnumerable<(Vector3 Placeholder, WallType[] ApprovedWalls)> Walls => _walls.Select(wall => (wall.Placeholder, wall.ApprovedWalls));
 
-    public Vector3 GameOverPlaceholder => _gameOverPlaceholder.transform.position;
+    public Vector3 LevelEndPlaceholder => _gameOverPlaceholder.transform.position;
 
     public float BonusTime => _bonusTime;
     public float StartTime => _startTime;

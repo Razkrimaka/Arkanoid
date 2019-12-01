@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
 public interface IBallController : IReleasable
 {
+    event EventHandler LoseBall;
+
     void GoToStart(Vector2 startMoveDirection);
+    void Stop();
 }
