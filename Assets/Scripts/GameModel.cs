@@ -27,7 +27,8 @@ public class GameModel : IGameModel
         ILevelConfiguration levelConfiguration,
         IControllerConfig controllerConfig,
         IGameCicle gameCicle,
-        IBonusManager bonusManager)
+        IBonusManager bonusManager,
+        IFactory<Vector3, IBlock> blockFactory)
     {
         Player = player;
         BallController = ballController;
@@ -36,7 +37,7 @@ public class GameModel : IGameModel
         ControllerConfig = controllerConfig;
         GameCicle = gameCicle;
         BonusManager = bonusManager;
-
+        BlockFactory = blockFactory;
         SetListeners(true);
 
         GoToStart();
@@ -95,10 +96,43 @@ public class GameModel : IGameModel
 
     private void GoToStart ()
     {
+        CreateBlocks(LevelConfiguration);
         Player.GoToStart();
         _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
         BallController.GoToStart(Vector2.one * BallEnergy);
         RemainingTime = TimeSpan.FromSeconds(LevelConfiguration.StartTime);
+    }
+
+    private void CreateBlocks(ILevelConfiguration config)
+    {
+        if (_blocks!= null)
+        {
+            foreach (var block in _blocks)
+            {
+                block.Release();
+            }
+            _blocks.Clear();
+        }
+        else
+        {
+            _blocks = new List<IBlock>();
+        }
+
+        _currentBlocksCount = 0;
+
+        foreach (var blockPlaceholder in config.BlocksPlaceholders)
+        {
+            var block = BlockFactory.Create(blockPlaceholder);
+            _blocks.Add(block);
+            block.Destroyed += OnBlockDestroy;
+        }
+
+        CurrentBlocksCount = _blocks.Count;
+    }
+
+    private void OnBlockDestroy(object sender, EventArgs eventArgs)
+    {
+        CurrentBlocksCount--;
     }
 
     private float CurrentPlayerPosition 
@@ -108,6 +142,19 @@ public class GameModel : IGameModel
         {
             _currentPlayerPosition = value;
             Player.Move(value);
+        }
+    }
+    private int CurrentBlocksCount
+    {
+        get => _currentBlocksCount;
+        set
+        {
+            _currentBlocksCount = value;
+            Debug.LogError($"Осталось: {_currentBlocksCount} блоков");
+            if (_currentBlocksCount==0)
+            {
+                ThrowGameOver(GameOverReasons.Win);
+            }
         }
     }
 
@@ -133,13 +180,12 @@ public class GameModel : IGameModel
         GameOver?.Invoke(this, reason);
     }
 
-
-
     private float _currentPlayerPosition;
+    private int _currentBlocksCount;
     private TimeSpan _remainingTime;
     private const float BallEnergy = 400f;
 
-    private List<IBlock> _blocks = new List<IBlock>();
+    private List<IBlock> _blocks;
 
     private readonly IPlayer Player;
     private readonly IBallController BallController;
@@ -148,4 +194,5 @@ public class GameModel : IGameModel
     private readonly IControllerConfig ControllerConfig;
     private readonly IGameCicle GameCicle;
     private readonly IBonusManager BonusManager;
+    private readonly IFactory<Vector3, IBlock> BlockFactory;
 }

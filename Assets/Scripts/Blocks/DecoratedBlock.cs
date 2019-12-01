@@ -22,6 +22,16 @@ public class DecoratedBlock :  IDecoratedBlock
 
     #endregion
 
+    #region IReleasable 
+
+    public void Release ()
+    {
+        _decoratedBlock.Release();
+        _decoratedBlock = null;
+    }
+
+    #endregion
+
     public DecoratedBlock(IDecoratedBlock decoratedBlock)
     {
         _decoratedBlock = decoratedBlock;

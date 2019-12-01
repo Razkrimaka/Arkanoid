@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IBlock 
+public interface IBlock :  IReleasable
 {
     event EventHandler Destroyed;
 }

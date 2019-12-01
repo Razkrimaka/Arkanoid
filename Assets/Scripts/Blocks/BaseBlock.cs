@@ -21,6 +21,15 @@ public class BaseBlock : IDecoratedBlock
 
     #endregion
 
+    #region IReleasable
+
+    public void Release ()
+    {
+        GameObject.Destroy(View);
+    }
+
+    #endregion
+
     public BaseBlock(string prefabName, ILevelRoot levelRoot, Vector3 position)
     {
         var template = Resources.Load<BlockView>(prefabName);

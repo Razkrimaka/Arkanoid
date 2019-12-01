@@ -381,7 +381,7 @@ MonoBehaviour:
     _approvedWalls: 01000000
   _gameOverPlaceholder: {fileID: 5230978416951009953}
   _bonusTime: 30
-  _startTime: 10
+  _startTime: 300
 --- !u!1 &905034253704168417
 GameObject:
   m_ObjectHideFlags: 0

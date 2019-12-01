@@ -18,15 +18,10 @@ public class Gameplay : IGameplay
         _ballController = new BallController("Prefabs/BallView", _levelRoot, _levelConfiguration.BallStartPosition);
         _bonusManager = new BonusManager();
         _timePanelController = new TimePanelController(_levelRoot);
-        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager);
-        _wallPack = Resources.Load<WallPack>("Configs/WallPack");
         _blockFactory = new BlockFactory(_levelRoot, _bonusManager);
-
-        foreach (var blockPlaceholder in _levelConfiguration.BlocksPlaceholders)
-        {
-            var block = _blockFactory.Create(blockPlaceholder);
-            _blocks.Add(block);
-        }
+        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager, _blockFactory);
+        _wallPack = Resources.Load<WallPack>("Configs/WallPack");
+        
 
         foreach(var wallConfig in _levelConfiguration.Walls)
         {
@@ -134,9 +129,7 @@ public class Gameplay : IGameplay
         UIManager = uiManager;
     }
 
-    private List<IBlock> _blocks = new List<IBlock>();
     private List<IReleasable> _walls = new List<IReleasable>();
-
 
     private IInputController _inputController;
     private IControllerConfig _controllerConfig;
@@ -147,9 +140,9 @@ public class Gameplay : IGameplay
     private ILevelConfiguration _levelConfiguration;
     private IGameModel _gameModel;
     private IWallPack _wallPack;
-    private IFactory<Vector3, IBlock> _blockFactory;
     private IBonusManager _bonusManager;
     private ITimePanelController _timePanelController;
+    private IFactory<Vector3, IBlock> _blockFactory;
 
     private readonly IUIManager UIManager;
 }
