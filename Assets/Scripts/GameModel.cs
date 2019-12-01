@@ -16,6 +16,7 @@ public class GameModel : IGameModel
     #region IGameModel 
 
     public event EventHandler<TimeSpan> TimeChanged;
+    public event EventHandler<GameOverReasons> GameOver;
 
     #endregion
 
@@ -91,7 +92,7 @@ public class GameModel : IGameModel
         Player.GoToStart();
         _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
         BallController.GoToStart(Vector2.one * BallEnergy);
-        RemainingTime = TimeSpan.FromSeconds(600);
+        RemainingTime = TimeSpan.FromSeconds(LevelConfiguration.StartTime);
     }
 
     private float CurrentPlayerPosition 
@@ -110,8 +111,20 @@ public class GameModel : IGameModel
         set
         {
             _remainingTime = value;
-            TimeChanged?.Invoke(this, _remainingTime);
+            if (_remainingTime.TotalSeconds>=0)
+            {
+                TimeChanged?.Invoke(this, _remainingTime);
+            }
+            else
+            {
+                ThrowGameOver(GameOverReasons.Time);
+            }           
         }
+    }
+
+    private void ThrowGameOver (GameOverReasons reason)
+    {
+        GameOver?.Invoke(this, reason);
     }
 
 

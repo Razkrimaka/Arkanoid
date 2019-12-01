@@ -13,4 +13,5 @@ public interface ILevelConfiguration
     Vector3 GameOverPlaceholder { get; }
 
     float BonusTime { get; }
+    float StartTime { get; }
 }

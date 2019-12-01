@@ -6,4 +6,5 @@ using UnityEngine;
 public interface IGameModel : IReleasable
 {
     event EventHandler<TimeSpan> TimeChanged;
+    event EventHandler<GameOverReasons> GameOver;
 }

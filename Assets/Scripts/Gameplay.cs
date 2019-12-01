@@ -37,6 +37,13 @@ public class Gameplay : IGameplay
         }
 
         _gameModel.TimeChanged += OnRemainingTimeChanged;
+        _gameModel.GameOver += OnGameOver;
+    }
+
+    private void OnGameOver(object sender, GameOverReasons reason)
+    {
+        _gameCicle.Pause = true;
+        Debug.LogError("Конец игры!");
     }
 
     private void OnRemainingTimeChanged(object sender, TimeSpan timeSpan)
