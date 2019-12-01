@@ -29,6 +29,11 @@ public class BonusView : MonoBehaviour, IBonusView
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.gameObject.tag == "Untagged")
+        {
+            return;
+        }
+
         Collision?.Invoke(this, collision.gameObject.tag);
 
         _rigidbody.Sleep();

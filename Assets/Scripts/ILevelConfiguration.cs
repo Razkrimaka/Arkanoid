@@ -11,4 +11,6 @@ public interface ILevelConfiguration
     IEnumerable<(Vector3 Placeholder, WallType[] ApprovedWalls)> Walls { get; }
 
     Vector3 GameOverPlaceholder { get; }
+
+    float BonusTime { get; }
 }

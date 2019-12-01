@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,13 +13,20 @@ public class GameModel : IGameModel
 
     #endregion
 
+    #region IGameModel 
+
+    public event EventHandler<TimeSpan> TimeChanged;
+
+    #endregion
+
     public GameModel
         (IPlayer player,
         IBallController ballController,
         IInputController input,
         ILevelConfiguration levelConfiguration,
         IControllerConfig controllerConfig,
-        IGameCicle gameCicle)
+        IGameCicle gameCicle,
+        IBonusManager bonusManager)
     {
         Player = player;
         BallController = ballController;
@@ -26,6 +34,7 @@ public class GameModel : IGameModel
         LevelConfiguration = levelConfiguration;
         ControllerConfig = controllerConfig;
         GameCicle = gameCicle;
+        BonusManager = bonusManager;
 
         SetListeners(true);
 
@@ -38,6 +47,8 @@ public class GameModel : IGameModel
         {
             Input.MoveLeft += OnInputMoveLeft;
             Input.MoveRight += OnInputMoveRight;
+
+            BonusManager.BonusPicked += ProcessBonus;
 
             GameCicle.Tick += OnTick;
         }
@@ -60,9 +71,19 @@ public class GameModel : IGameModel
         }
     }
 
+    private void ProcessBonus(object sender, Bonuses bonus)
+    {
+        switch (bonus)
+        {
+            case Bonuses.Time:
+                RemainingTime += TimeSpan.FromSeconds(LevelConfiguration.BonusTime);
+                break;
+        }
+    }
+
     private void OnTick(object sender, float duration)
     {
-
+        RemainingTime -= TimeSpan.FromSeconds(duration);
     }
 
     private void GoToStart ()
@@ -70,6 +91,7 @@ public class GameModel : IGameModel
         Player.GoToStart();
         _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
         BallController.GoToStart(Vector2.one * BallEnergy);
+        RemainingTime = TimeSpan.FromSeconds(600);
     }
 
     private float CurrentPlayerPosition 
@@ -82,7 +104,20 @@ public class GameModel : IGameModel
         }
     }
 
+    private TimeSpan RemainingTime
+    {
+        get => _remainingTime;
+        set
+        {
+            _remainingTime = value;
+            TimeChanged?.Invoke(this, _remainingTime);
+        }
+    }
+
+
+
     private float _currentPlayerPosition;
+    private TimeSpan _remainingTime;
     private const float BallEnergy = 400f;
 
     private List<IBlock> _blocks = new List<IBlock>();
@@ -93,4 +128,5 @@ public class GameModel : IGameModel
     private readonly ILevelConfiguration LevelConfiguration;
     private readonly IControllerConfig ControllerConfig;
     private readonly IGameCicle GameCicle;
+    private readonly IBonusManager BonusManager;
 }

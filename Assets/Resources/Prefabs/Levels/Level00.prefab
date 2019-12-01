@@ -379,7 +379,8 @@ MonoBehaviour:
     _approvedWalls: 00000000
   - _placeholder: {fileID: 6343604622146531058}
     _approvedWalls: 01000000
-  _gameOverPlaceholder: {fileID: 0}
+  _gameOverPlaceholder: {fileID: 5230978416951009953}
+  _bonusTime: 30
 --- !u!1 &905034253704168417
 GameObject:
   m_ObjectHideFlags: 0

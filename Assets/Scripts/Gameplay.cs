@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Gameplay : IGameplay
@@ -14,9 +15,10 @@ public class Gameplay : IGameplay
         _levelConfiguration = GameObject.Instantiate(Resources.Load<LevelConfig>($"Prefabs/Levels/{levelId}"));
         _player = new Player("Prefabs/PlayerView", _levelRoot, _levelConfiguration.PlayerStartPosition);
         _ballController = new BallController("Prefabs/BallView", _levelRoot, _levelConfiguration.BallStartPosition);
-        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle);
-        _wallPack = Resources.Load<WallPack>("Configs/WallPack");
         _bonusManager = new BonusManager();
+        _timePanelController = new TimePanelController(_levelRoot);
+        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager);
+        _wallPack = Resources.Load<WallPack>("Configs/WallPack");
         _blockFactory = new BlockFactory(_levelRoot, _bonusManager);
 
         foreach (var blockPlaceholder in _levelConfiguration.BlocksPlaceholders)
@@ -27,12 +29,19 @@ public class Gameplay : IGameplay
 
         foreach(var wallConfig in _levelConfiguration.Walls)
         {
-            var randomIndex = Random.Range(0, wallConfig.ApprovedWalls.Length);
+            var randomIndex = UnityEngine.Random.Range(0, wallConfig.ApprovedWalls.Length);
             var template = _wallPack.GetWall(wallConfig.ApprovedWalls[randomIndex]);
             var wall = GameObject.Instantiate(template, _levelRoot.Transform);
             wall.transform.position = wallConfig.Placeholder;
             _walls.Add(wall);
         }
+
+        _gameModel.TimeChanged += OnRemainingTimeChanged;
+    }
+
+    private void OnRemainingTimeChanged(object sender, TimeSpan timeSpan)
+    {
+        _timePanelController.SetTime(timeSpan);
     }
 
     #endregion
@@ -56,4 +65,5 @@ public class Gameplay : IGameplay
     private IWallPack _wallPack;
     private IFactory<Vector3, IBlock> _blockFactory;
     private IBonusManager _bonusManager;
+    private ITimePanelController _timePanelController;
 }

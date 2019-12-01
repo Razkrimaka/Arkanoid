@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IGameModel : IReleasable
+public interface ITimePanelController
 {
-    event EventHandler<TimeSpan> TimeChanged;
+    void SetTime(TimeSpan timeSpan);
 }

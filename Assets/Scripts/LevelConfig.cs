@@ -19,6 +19,8 @@ public class LevelConfig : MonoBehaviour, ILevelConfiguration
 
     public Vector3 GameOverPlaceholder => _gameOverPlaceholder.transform.position;
 
+    public float BonusTime => _bonusTime;
+
     #endregion
 
     [SerializeField]
@@ -29,6 +31,8 @@ public class LevelConfig : MonoBehaviour, ILevelConfiguration
     private WallConfig[] _walls;
     [SerializeField]
     private Transform _gameOverPlaceholder;
+    [SerializeField]
+    private float _bonusTime;
 
     private Transform[] _blocks => this.GetComponentsInChildren<Transform>(true);
 
