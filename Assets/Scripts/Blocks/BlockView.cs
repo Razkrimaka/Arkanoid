@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class BlockView : MonoBehaviour, IBlockView
 {
-
     #region IBlockView 
 
     public event EventHandler Hit;

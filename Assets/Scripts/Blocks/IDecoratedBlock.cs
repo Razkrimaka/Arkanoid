@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IDecoratedBlock
+public interface IDecoratedBlock : IBlock
 {
     BlockView View { get; }
 

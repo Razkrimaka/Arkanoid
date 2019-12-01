@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class BaseBlock : IBlock, IDecoratedBlock
+public class BaseBlock : IDecoratedBlock
 {
     #region IBlock
 

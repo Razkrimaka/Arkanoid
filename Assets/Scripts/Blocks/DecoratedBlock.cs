@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DecoratedBlock : IBlock, IDecoratedBlock
+public class DecoratedBlock :  IDecoratedBlock
 {
     #region IBlock
 
-    public event EventHandler Destroyed;
+    public virtual event EventHandler Destroyed;
 
     #endregion
 
@@ -25,6 +25,13 @@ public class DecoratedBlock : IBlock, IDecoratedBlock
     public DecoratedBlock(IDecoratedBlock decoratedBlock)
     {
         _decoratedBlock = decoratedBlock;
+
+        _decoratedBlock.Destroyed += OnDecoratedBlockDestroyed;
+
+        void OnDecoratedBlockDestroyed(object sender, EventArgs eventArgs)
+        {
+            Destroyed?.Invoke(this, eventArgs);           
+        }
     }
 
     protected IDecoratedBlock _decoratedBlock;

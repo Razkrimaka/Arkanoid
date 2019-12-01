@@ -16,7 +16,8 @@ public class Gameplay : IGameplay
         _ballController = new BallController("Prefabs/BallView", _levelRoot, _levelConfiguration.BallStartPosition);
         _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle);
         _wallPack = Resources.Load<WallPack>("Configs/WallPack");
-        _blockFactory = new BlockFactory(_levelRoot);
+        _bonusManager = new BonusManager();
+        _blockFactory = new BlockFactory(_levelRoot, _bonusManager);
 
         foreach (var blockPlaceholder in _levelConfiguration.BlocksPlaceholders)
         {
@@ -54,4 +55,5 @@ public class Gameplay : IGameplay
     private IGameModel _gameModel;
     private IWallPack _wallPack;
     private IFactory<Vector3, IBlock> _blockFactory;
+    private IBonusManager _bonusManager;
 }
