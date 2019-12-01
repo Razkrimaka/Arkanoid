@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -7664334909789160573}
   - component: {fileID: 2217340092467163537}
   m_Layer: 5
-  m_Name: GameplayCanvas
+  m_Name: LevelRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -91,7 +91,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5701924971826288314}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9b899fd40b7f7e429bb3dae74f19df7, type: 3}
+  m_Script: {fileID: 11500000, guid: 555502254c9ed0f419cc8ba31f854126, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2217340092467163537

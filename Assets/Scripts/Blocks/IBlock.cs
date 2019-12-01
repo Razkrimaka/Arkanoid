@@ -6,5 +6,4 @@ using UnityEngine;
 public interface IBlock 
 {
     event EventHandler Destroyed;
-    void Hit();
 }

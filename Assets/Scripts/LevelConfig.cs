@@ -17,6 +17,8 @@ public class LevelConfig : MonoBehaviour, ILevelConfiguration
 
     public IEnumerable<(Vector3 Placeholder, WallType[] ApprovedWalls)> Walls => _walls.Select(wall => (wall.Placeholder, wall.ApprovedWalls));
 
+    public Vector3 GameOverPlaceholder => _gameOverPlaceholder.transform.position;
+
     #endregion
 
     [SerializeField]
@@ -25,6 +27,8 @@ public class LevelConfig : MonoBehaviour, ILevelConfiguration
     private Transform _ballPlaceholder;
     [SerializeField]
     private WallConfig[] _walls;
+    [SerializeField]
+    private Transform _gameOverPlaceholder;
 
     private Transform[] _blocks => this.GetComponentsInChildren<Transform>(true);
 

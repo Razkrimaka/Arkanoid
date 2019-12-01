@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameplayCanvas : MonoBehaviour, ILevelRoot
+public class LevelRoot : MonoBehaviour, ILevelRoot
 {
-    #region IGameplayCanvas
+    #region ILevelRoot
 
     public Transform Transform => transform;
 

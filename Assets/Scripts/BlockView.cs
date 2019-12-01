@@ -1,11 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
 
-public class BlockView : MonoBehaviour
+public class BlockView : MonoBehaviour, IBlockView
 {
-    void OnTriggerEnter2D(Collider2D collision)
+
+    #region IBlockView 
+
+    public event EventHandler Hit;
+
+    #endregion
+
+    [SerializeField]
+    private SpriteRenderer _viewSpriteRenderer;
+
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.LogError("!!!");
+        if (collision.gameObject.tag == "ball")
+        {
+            Hit?.Invoke(this, EventArgs.Empty);
+        }
     }
 }

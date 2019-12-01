@@ -83,7 +83,7 @@ public class GameModel : IGameModel
     }
 
     private float _currentPlayerPosition;
-    private const float BallEnergy = 200f;
+    private const float BallEnergy = 400f;
 
     private List<IBlock> _blocks = new List<IBlock>();
 
