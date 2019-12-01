@@ -25,10 +25,10 @@ public class ScoreController : IScoreController
 
     #endregion
 
-    public ScoreController ()
+    public ScoreController (ILevelRoot levelRoot)
     {
         var template = Resources.Load<ScoreView>("Prefabs/ScoreView");
-        View = GameObject.Instantiate(template);
+        View = GameObject.Instantiate(template, levelRoot.Transform);
     }
 
     private int _currentSequenceState;

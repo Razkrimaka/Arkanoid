@@ -8,6 +8,8 @@ public class BallController : IBallController
     #region IBallController
 
     public event EventHandler LoseBall;
+    public event EventHandler TouchPlatform;
+
 
     public void Stop()
     {
@@ -37,12 +39,20 @@ public class BallController : IBallController
         _ballView = GameObject.Instantiate(Resources.Load<BallView>(prefabName), gameplayCanvas.Transform, true);
         StartPosition = startPosition;
 
-        _ballView.Lose += OnLose;
+        _ballView.Collision += OnCollision;
     }
 
-    private void OnLose(object sender, EventArgs eventArgs)
+    private void OnCollision(object sender, string tag)
     {
-        LoseBall?.Invoke(this, eventArgs);
+        switch(tag)
+        {
+            case "Player":
+                TouchPlatform?.Invoke(this, EventArgs.Empty);
+                break;
+            case "Finish":
+                LoseBall?.Invoke(this, EventArgs.Empty);
+                break;
+        }        
     }
 
     private BallView _ballView;

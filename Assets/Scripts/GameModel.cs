@@ -28,7 +28,8 @@ public class GameModel : IGameModel
         IControllerConfig controllerConfig,
         IGameCicle gameCicle,
         IBonusManager bonusManager,
-        IFactory<Vector3, IBlock> blockFactory)
+        IFactory<Vector3, IBlock> blockFactory,
+        IScoreController scoreController)
     {
         Player = player;
         BallController = ballController;
@@ -38,6 +39,7 @@ public class GameModel : IGameModel
         GameCicle = gameCicle;
         BonusManager = bonusManager;
         BlockFactory = blockFactory;
+        ScoreController = scoreController;
         SetListeners(true);
 
         GoToStart();
@@ -52,6 +54,7 @@ public class GameModel : IGameModel
 
             BonusManager.BonusPicked += ProcessBonus;
             BallController.LoseBall += OnLoseBall;
+            BallController.TouchPlatform += OnTouchPlatform;
 
             GameCicle.Tick += OnTick;
         }
@@ -72,6 +75,11 @@ public class GameModel : IGameModel
         {
             CurrentPlayerPosition -= duration * ControllerConfig.MoveSensity;
         }
+    }
+
+    private void OnTouchPlatform(object sender, EventArgs e)
+    {
+        ScoreController.ResetScoreSequence();
     }
 
     private void OnLoseBall(object sender, EventArgs eventArgs)
@@ -97,6 +105,7 @@ public class GameModel : IGameModel
     private void GoToStart ()
     {
         CreateBlocks(LevelConfiguration);
+        ScoreController.GoToStart();
         Player.GoToStart();
         _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
         BallController.GoToStart(Vector2.one * BallEnergy);
@@ -133,6 +142,7 @@ public class GameModel : IGameModel
     private void OnBlockDestroy(object sender, EventArgs eventArgs)
     {
         CurrentBlocksCount--;
+
     }
 
     private float CurrentPlayerPosition 
@@ -150,7 +160,7 @@ public class GameModel : IGameModel
         set
         {
             _currentBlocksCount = value;
-            Debug.LogError($"Осталось: {_currentBlocksCount} блоков");
+            ScoreController.IncrementPoint();
             if (_currentBlocksCount==0)
             {
                 ThrowGameOver(GameOverReasons.Win);
@@ -195,4 +205,5 @@ public class GameModel : IGameModel
     private readonly IGameCicle GameCicle;
     private readonly IBonusManager BonusManager;
     private readonly IFactory<Vector3, IBlock> BlockFactory;
+    private readonly IScoreController ScoreController;
 }

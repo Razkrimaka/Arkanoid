@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BallView : MonoBehaviour
 {
-    public event EventHandler Lose;
+    public event EventHandler<string> Collision;
 
     [SerializeField]
     private Rigidbody2D _rigidbody;
@@ -14,10 +14,6 @@ public class BallView : MonoBehaviour
 
     private void OnCollisionEnter2D (Collision2D collision)
     {
-        Debug.LogError($"Столкновение с {collision.gameObject.tag}");
-        if (collision.gameObject.tag == "Finish")
-        {
-            Lose?.Invoke(this, EventArgs.Empty);
-        }
+        Collision?.Invoke(this, collision.gameObject.tag);
     }
 }

@@ -19,7 +19,8 @@ public class Gameplay : IGameplay
         _bonusManager = new BonusManager();
         _timePanelController = new TimePanelController(_levelRoot);
         _blockFactory = new BlockFactory(_levelRoot, _bonusManager);
-        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager, _blockFactory);
+        _scoreController = new ScoreController(_levelRoot);
+        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager, _blockFactory, _scoreController);
         _wallPack = Resources.Load<WallPack>("Configs/WallPack");
         
 
@@ -143,6 +144,7 @@ public class Gameplay : IGameplay
     private IBonusManager _bonusManager;
     private ITimePanelController _timePanelController;
     private IFactory<Vector3, IBlock> _blockFactory;
+    private IScoreController _scoreController;
 
     private readonly IUIManager UIManager;
 }
