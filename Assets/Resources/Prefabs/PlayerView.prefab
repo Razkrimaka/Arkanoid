@@ -53,6 +53,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rigidbody2D: {fileID: 3161620270409171371}
+  _boxCollider: {fileID: -7906314259379243744}
+  _spriteRenderer: {fileID: -5481140031113761235}
 --- !u!222 &8750513683880697202
 CanvasRenderer:
   m_ObjectHideFlags: 0

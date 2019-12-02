@@ -58,8 +58,8 @@ public class DialogController : BaseWindowController<DialogView>
 
         void ButtonClickHandle(ButtonCommands commandId)
         {
+            GameObject.Destroy(View.gameObject);
             WindowClosed?.Invoke(this, commandId);
-            GameObject.Destroy(View);
         }
     }
 

@@ -14,6 +14,16 @@ public class Player :  IPlayer
         _playerView.transform.position = StartPosition;
     }
 
+    public void IncreaseWidth()
+    {
+        CurentWidth += WidthStep;
+    }
+
+    public void ResetWidth()
+    {
+        CurentWidth = DefaultWidth;
+    }
+
     #endregion
 
     #region IReleasable
@@ -31,7 +41,22 @@ public class Player :  IPlayer
         StartPosition = startPosition;
     }
 
+    private float CurentWidth
+    {
+        get => _currentWidth;
+        set
+        {
+            _currentWidth = _currentWidth < MaxWidth ? value : _currentWidth;
+            _playerView.SetWidth(_currentWidth);
+        }
+    }
+
     private PlayerView _playerView;
     private float YPosition => _playerView.transform.position.y;
     private readonly Vector2 StartPosition;
+    private float _currentWidth;
+
+    private const float MaxWidth = 400f;
+    private const float WidthStep = 10f;
+    private const float DefaultWidth = 190f;
 }

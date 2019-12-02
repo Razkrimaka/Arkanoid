@@ -10,14 +10,30 @@ public class Bonus : IBonus
     public event EventHandler Picked;
     public event EventHandler Over;
 
+
+    public void Stop()
+    {
+        View.Stop();
+    }
+
     #endregion
 
-    public Bonus(Bonuses bonusId, Vector3 position, BonusView view)
-    {
-        view.SetBonus(bonusId);
-        view.Throw(position, GetThrowedForce());
+    #region IReleasable
 
-        view.Collision += OnCollision;
+    public void Release()
+    {
+        GameObject.Destroy(View.GameObject);
+    }
+
+    #endregion
+
+    public Bonus(Bonuses bonusId, Vector3 position, IBonusView view)
+    {
+        View = view;
+        View.SetBonus(bonusId);
+        View.Throw(position, GetThrowedForce());
+
+        View.Collision += OnCollision;
     }
 
     private void OnCollision(object sender, string tag)
@@ -40,6 +56,7 @@ public class Bonus : IBonus
         return modifiedVector * ThrowForce;
     }
 
-
     private const float ThrowForce = 5000f;
+
+    private IBonusView View;
 }

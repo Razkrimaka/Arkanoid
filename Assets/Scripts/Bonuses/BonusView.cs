@@ -19,9 +19,15 @@ public class BonusView : MonoBehaviour, IBonusView
         this.transform.position = position;
         this.gameObject.SetActive(true);
         _rigidbody.WakeUp();
-        Debug.LogError($"Сила броска бонуса: {force}");
         _rigidbody.AddForce(force, ForceMode2D.Impulse);
     }
+
+    public void Stop()
+    {
+        _rigidbody.Sleep();
+    }
+
+    public GameObject GameObject => gameObject;
 
     #endregion
 
@@ -35,9 +41,6 @@ public class BonusView : MonoBehaviour, IBonusView
         }
 
         Collision?.Invoke(this, collision.gameObject.tag);
-
-        _rigidbody.Sleep();
-        this.gameObject.SetActive(false);
     }
 
     #endregion

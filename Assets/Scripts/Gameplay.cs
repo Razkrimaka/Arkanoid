@@ -20,7 +20,8 @@ public class Gameplay : IGameplay
         _timePanelController = new TimePanelController(_levelRoot);
         _blockFactory = new BlockFactory(_levelRoot, _bonusManager);
         _scoreController = new ScoreController(_levelRoot);
-        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager, _blockFactory, _scoreController);
+        _lifeController = new LifeController(_levelRoot);
+        _gameModel = new GameModel(_player, _ballController, _inputController, _levelConfiguration, _controllerConfig, _gameCicle, _bonusManager, _blockFactory, _scoreController, _lifeController);
         _wallPack = Resources.Load<WallPack>("Configs/WallPack");
         
 
@@ -96,27 +97,30 @@ public class Gameplay : IGameplay
         var dialog = UIManager.Show(WindowID.Dialog, windowBody, buttonTexts, buttonCommands);
 
         dialog.WindowClosed += OnDialogClosed;
-    }
 
-    private void OnDialogClosed(object sender, ButtonCommands closeResult)
-    {
-        switch (closeResult)
+        void OnDialogClosed(object dialogSender, ButtonCommands closeResult)
         {
-            case ButtonCommands.Close:
+            dialog.WindowClosed -= OnDialogClosed;
+            switch (closeResult)
+            {
+                case ButtonCommands.Close:
 #if UNITY_EDITOR
-                EditorApplication.isPlaying = false;
+                    EditorApplication.isPlaying = false;
 #else
                     Application.Quit();
 #endif
-                break;
-            case ButtonCommands.Next:
-                Debug.Log("Следующий уровень");
-                break;
-            case ButtonCommands.Retry:
-                Debug.Log("Сначала");
-                break;
+                    break;
+                case ButtonCommands.Next:
+                    _gameModel.NextLevel();
+                    break;
+                case ButtonCommands.Retry:
+                    _gameModel.GoToStart();
+                    break;
+            }
         }
     }
+
+
 
     private void OnRemainingTimeChanged(object sender, TimeSpan timeSpan)
     {
@@ -145,6 +149,7 @@ public class Gameplay : IGameplay
     private ITimePanelController _timePanelController;
     private IFactory<Vector3, IBlock> _blockFactory;
     private IScoreController _scoreController;
+    private ILifeController _lifeController;
 
     private readonly IUIManager UIManager;
 }

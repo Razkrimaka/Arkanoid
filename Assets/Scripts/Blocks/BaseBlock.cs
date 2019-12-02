@@ -25,7 +25,7 @@ public class BaseBlock : IDecoratedBlock
 
     public void Release ()
     {
-        GameObject.Destroy(View);
+        GameObject.Destroy(View.gameObject);
     }
 
     #endregion

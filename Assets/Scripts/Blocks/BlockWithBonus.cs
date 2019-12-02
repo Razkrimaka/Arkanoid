@@ -19,7 +19,6 @@ public class BlockWithBonus : DecoratedBlock
 
     private void OnDestroyed(object sender, EventArgs eventArgs)
     {
-        Debug.LogError("Block with bonus destroyed");
         BonusManager.DropBonus(_blockBonus, View.transform.position);
     }
 

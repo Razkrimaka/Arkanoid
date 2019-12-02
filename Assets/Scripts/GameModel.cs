@@ -18,6 +18,32 @@ public class GameModel : IGameModel
     public event EventHandler<TimeSpan> TimeChanged;
     public event EventHandler<GameOverReasons> GameOver;
 
+    public void GoToStart()
+    {
+        GameCicle.Pause = false;
+        CreateBlocks(LevelConfiguration);
+        ScoreController.GoToStart();
+        LifeController.GoToStart();
+        Player.GoToStart();
+        Player.ResetWidth();
+        _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
+        BallController.GoToStart(Vector2.one * BallEnergy);
+        RemainingTime = TimeSpan.FromSeconds(LevelConfiguration.StartTime);
+        BonusManager.Release();
+    }
+
+    public void NextLevel()
+    {
+        GameCicle.Pause = false;
+        CreateBlocks(LevelConfiguration);
+        Player.GoToStart();
+        _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
+        BallController.Stop();
+        BallController.GoToStart(Vector2.one * BallEnergy);
+        RemainingTime += TimeSpan.FromSeconds(LevelConfiguration.StartTime);
+        BonusManager.Release();
+    }
+
     #endregion
 
     public GameModel
@@ -29,7 +55,8 @@ public class GameModel : IGameModel
         IGameCicle gameCicle,
         IBonusManager bonusManager,
         IFactory<Vector3, IBlock> blockFactory,
-        IScoreController scoreController)
+        IScoreController scoreController,
+        ILifeController lifeController)
     {
         Player = player;
         BallController = ballController;
@@ -40,6 +67,8 @@ public class GameModel : IGameModel
         BonusManager = bonusManager;
         BlockFactory = blockFactory;
         ScoreController = scoreController;
+        LifeController = lifeController;
+
         SetListeners(true);
 
         GoToStart();
@@ -55,13 +84,19 @@ public class GameModel : IGameModel
             BonusManager.BonusPicked += ProcessBonus;
             BallController.LoseBall += OnLoseBall;
             BallController.TouchPlatform += OnTouchPlatform;
+            LifeController.GameOver += OnGameOverLoseHP;
 
             GameCicle.Tick += OnTick;
         }
         else
         {
-            Input.MoveLeft += OnInputMoveLeft;
-            Input.MoveRight += OnInputMoveRight;
+            Input.MoveLeft -= OnInputMoveLeft;
+            Input.MoveRight -= OnInputMoveRight;
+
+            BonusManager.BonusPicked -= ProcessBonus;
+            BallController.LoseBall -= OnLoseBall;
+            BallController.TouchPlatform -= OnTouchPlatform;
+            LifeController.GameOver -= OnGameOverLoseHP;
 
             GameCicle.Tick -= OnTick;
         }
@@ -84,6 +119,11 @@ public class GameModel : IGameModel
 
     private void OnLoseBall(object sender, EventArgs eventArgs)
     {
+        LifeController.DecreaseHP();
+    }
+
+    private void OnGameOverLoseHP(object sender, EventArgs eventArgs)
+    {
         ThrowGameOver(GameOverReasons.LoseBall);
     }
 
@@ -94,22 +134,18 @@ public class GameModel : IGameModel
             case Bonuses.Time:
                 RemainingTime += TimeSpan.FromSeconds(LevelConfiguration.BonusTime);
                 break;
+            case Bonuses.Life:
+                LifeController.IncreaseHP();
+                break;
+            case Bonuses.WidthOfPlatform:
+                Player.IncreaseWidth();
+                break;
         }
     }
 
     private void OnTick(object sender, float duration)
     {
         RemainingTime -= TimeSpan.FromSeconds(duration);
-    }
-
-    private void GoToStart ()
-    {
-        CreateBlocks(LevelConfiguration);
-        ScoreController.GoToStart();
-        Player.GoToStart();
-        _currentPlayerPosition = LevelConfiguration.PlayerStartPosition.x;
-        BallController.GoToStart(Vector2.one * BallEnergy);
-        RemainingTime = TimeSpan.FromSeconds(LevelConfiguration.StartTime);
     }
 
     private void CreateBlocks(ILevelConfiguration config)
@@ -206,4 +242,5 @@ public class GameModel : IGameModel
     private readonly IBonusManager BonusManager;
     private readonly IFactory<Vector3, IBlock> BlockFactory;
     private readonly IScoreController ScoreController;
+    private readonly ILifeController LifeController;
 }
